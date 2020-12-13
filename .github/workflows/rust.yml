@@ -12,7 +12,11 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: true
+      matrix:
+        operating-system: [ubuntu-20.04, ubuntu-18.04, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
