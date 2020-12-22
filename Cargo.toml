@@ -1,7 +1,7 @@
 [package]
 name = "uuid64rs"
 version = "0.0.1"
-description = "UUID v4 (random) Rust package with a custom base 64 encoding added."
+description = "UUID v4 (random) Rust crate with an additional custom base 64 encoding which is web and database friendly"
 authors = ["Michael Cummings <dragonrun1@gmail.com>"]
 edition = "2018"
 license = "Apache-2.0 OR MIT"
