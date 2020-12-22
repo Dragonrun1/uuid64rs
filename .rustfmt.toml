@@ -1,0 +1,14 @@
+unstable_features = true
+blank_lines_upper_bound = 1
+# Awaiting 3.0?
+#group_imports = "StdExternalCrate"
+max_width = 80
+merge_imports = true
+newline_style = "Unix"
+use_field_init_shorthand = true
+# To be replaced in 2.0 with width_heuristics option.
+use_small_heuristics = "Max"
+use_try_shorthand = true
+# Awaiting 2.0
+#width_heuristics = "Max"
+wrap_comments = true
