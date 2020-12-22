@@ -44,6 +44,10 @@ use thiserror::Error;
 pub enum U64Error {
     #[error("Expected data array length of 16 but was given length: {0}")]
     InvalidArrayLength(usize),
+    #[error(
+        "The given base64 string contained one or more invalid characters"
+    )]
+    InvalidBase64String,
     #[error("The given binary string contained one or more invalid digits")]
     InvalidBinString,
     #[error(
@@ -52,16 +56,32 @@ pub enum U64Error {
     InvalidHexString,
     #[error(transparent)]
     InvalidSliceLength(#[from] TryFromSliceError),
-    #[error("The given string contained one or more invalid UTF-8 characters")]
-    InvalidUtf8String,
-    #[error(
-        "The given uuid64 string contained one or more invalid characters"
-    )]
-    InvalidUuid64String,
     #[error("Can not convert a string with length of: {0}")]
     InvalidStrLength(usize),
+    #[error("The given string contained one or more invalid UTF-8 characters")]
+    InvalidUtf8String,
+    #[error("The given uuid string contained one or more invalid characters")]
+    InvalidUuidString,
     #[error("Received unknown bit pattern: {0}")]
     UnknownBitPattern(String),
+}
+
+impl PartialEq for U64Error {
+    fn eq(&self, other: &Self) -> bool {
+        use crate::U64Error::*;
+        match (self, other) {
+            (InvalidArrayLength(m), InvalidArrayLength(n)) => m == n,
+            (InvalidBase64String, InvalidBase64String) => true,
+            (InvalidBinString, InvalidBinString) => true,
+            (InvalidHexString, InvalidHexString) => true,
+            (InvalidSliceLength(_), InvalidSliceLength(_)) => true,
+            (InvalidStrLength(m), InvalidStrLength(n)) => m == n,
+            (InvalidUtf8String, InvalidUtf8String) => true,
+            (InvalidUuidString, InvalidUuidString) => true,
+            (UnknownBitPattern(m), UnknownBitPattern(n)) => m == n,
+            _ => false,
+        }
+    }
 }
 
 impl From<U64Error> for std::num::ParseIntError {

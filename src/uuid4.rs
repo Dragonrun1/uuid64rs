@@ -165,7 +165,7 @@ impl TryFrom<&[u8; 22]> for Uuid4 {
                 Some(n) => {
                     bin.push_str(*n);
                 }
-                None => return Err(U64Error::InvalidUuid64String),
+                None => return Err(U64Error::InvalidBase64String),
             }
         }
         // Drop the 4 fill bits that were add to have 22 chars.
@@ -211,7 +211,7 @@ impl TryFrom<&[u8; 36]> for Uuid4 {
             .map_err(|_| U64Error::InvalidUtf8String)?
             .replacen('-', "", 4);
         let mut result = u128::from_str_radix(&*utf, 16)
-            .map_err(|_| U64Error::InvalidHexString)?;
+            .map_err(|_| U64Error::InvalidUuidString)?;
         result &= 0xffffffffffffff3fff0fffffffffffff;
         result |= 0x00000000000000800040000000000000;
         Ok(Self(result))
@@ -223,7 +223,7 @@ mod tests {
     use super::*;
 
     /// Common input data for encoder tests.
-    fn test_byte_array_data() -> Vec<[u8; 16]> {
+    fn test_inputs_array_data() -> Vec<[u8; 16]> {
         vec![
             [0; 16],
             [255; 16],
@@ -241,6 +241,21 @@ mod tests {
                 0, 99, 100, 101, 102, 103, 104, 105, 106, 48, 49, 50, 51, 52,
                 53, 0,
             ],
+        ]
+    }
+    /// Common expect data for decode tests.
+    fn test_expects_array_data() -> Vec<u128> {
+        vec![
+            0x00000000000000800040000000000000u128,
+            0xffffffffffffffbfff4fffffffffffff,
+            0x0f0f0f0f0f0f0f8f0f4f0f0f0f0f0f0f,
+            0xf0f0f0f0f0f0f0b0f040f0f0f0f0f0f0,
+            0x01030509112141818141211109050301,
+            0x232221201f1e468544434241403f3e00,
+            0x002221201f1e468544434241403f3e3d,
+            0x232221201f1e468544434241403f0000,
+            0x3534333231306aa96847666564630000,
+            0x00353433323130aa6948676665646300,
         ]
     }
 
@@ -267,21 +282,10 @@ mod tests {
             "A1NDMyMTBqqWhHZmVkYwAA",
             "AANTQzMjEwqmlIZ2ZlZGMA",
         ];
-        let expects = vec![
-            0x00000000000000800040000000000000u128,
-            0xffffffffffffffbfff4fffffffffffff,
-            0x0f0f0f0f0f0f0f8f0f4f0f0f0f0f0f0f,
-            0xf0f0f0f0f0f0f0b0f040f0f0f0f0f0f0,
-            0x01030509112141818141211109050301,
-            0x232221201f1e468544434241403f3e00,
-            0x002221201f1e468544434241403f3e3d,
-            0x232221201f1e468544434241403f0000,
-            0x3534333231306aa96847666564630000,
-            0x00353433323130aa6948676665646300,
-        ];
+        let expects = test_expects_array_data();
         for (input, expected) in inputs.iter().zip(expects) {
             let sut = Uuid4::try_from(*input).unwrap();
-            assert_eq!(sut.0, expected);
+            assert_eq!(sut.uuid0(), expected);
         }
     }
     #[test]
@@ -298,21 +302,10 @@ mod tests {
             "3534333231306aa96847666564630000",
             "00353433323130aa6948676665646300",
         ];
-        let expects = vec![
-            0x00000000000000800040000000000000u128,
-            0xffffffffffffffbfff4fffffffffffff,
-            0x0f0f0f0f0f0f0f8f0f4f0f0f0f0f0f0f,
-            0xf0f0f0f0f0f0f0b0f040f0f0f0f0f0f0,
-            0x01030509112141818141211109050301,
-            0x232221201f1e468544434241403f3e00,
-            0x002221201f1e468544434241403f3e3d,
-            0x232221201f1e468544434241403f0000,
-            0x3534333231306aa96847666564630000,
-            0x00353433323130aa6948676665646300,
-        ];
+        let expects = test_expects_array_data();
         for (input, expected) in inputs.iter().zip(expects) {
             let sut = Uuid4::try_from(*input).unwrap();
-            assert_eq!(sut.0, expected);
+            assert_eq!(sut.uuid0(), expected);
         }
     }
     #[test]
@@ -329,21 +322,10 @@ mod tests {
             "35343332-3130-6aa9-6847-666564630000",
             "00353433-3231-30aa-6948-676665646300",
         ];
-        let expects = vec![
-            0x00000000000000800040000000000000u128,
-            0xffffffffffffffbfff4fffffffffffff,
-            0x0f0f0f0f0f0f0f8f0f4f0f0f0f0f0f0f,
-            0xf0f0f0f0f0f0f0b0f040f0f0f0f0f0f0,
-            0x01030509112141818141211109050301,
-            0x232221201f1e468544434241403f3e00,
-            0x002221201f1e468544434241403f3e3d,
-            0x232221201f1e468544434241403f0000,
-            0x3534333231306aa96847666564630000,
-            0x00353433323130aa6948676665646300,
-        ];
+        let expects = test_expects_array_data();
         for (input, expected) in inputs.iter().zip(expects) {
             let sut = Uuid4::try_from(*input).unwrap();
-            assert_eq!(sut.0, expected);
+            assert_eq!(sut.uuid0(), expected);
         }
     }
     #[test]
@@ -360,7 +342,7 @@ mod tests {
             "A1NDMyMTBqqWhHZmVkYwAA",
             "AANTQzMjEwqmlIZ2ZlZGMA",
         ];
-        let inputs = test_byte_array_data();
+        let inputs = test_inputs_array_data();
         for (input, expected) in inputs.iter().zip(expects) {
             let sut: Uuid4 = input.into();
             let expected = String::from(expected);
@@ -381,7 +363,7 @@ mod tests {
             "3534333231306aa96847666564630000",
             "00353433323130aa6948676665646300",
         ];
-        let inputs = test_byte_array_data();
+        let inputs = test_inputs_array_data();
         for (input, expected) in inputs.iter().zip(expects) {
             let sut: Uuid4 = input.into();
             let expected = String::from(expected);
@@ -402,7 +384,7 @@ mod tests {
             "35343332-3130-6aa9-6847-666564630000",
             "00353433-3231-30aa-6948-676665646300",
         ];
-        let inputs = test_byte_array_data();
+        let inputs = test_inputs_array_data();
         for (input, expected) in inputs.iter().zip(expects) {
             let sut: Uuid4 = input.into();
             let expected = String::from(expected);
@@ -414,5 +396,26 @@ mod tests {
         let expected = "00000000-0000-0080-0040-000000000000";
         let sut = Uuid4::default();
         assert_eq!(sut.as_uuid().unwrap(), expected)
+    }
+    #[test]
+    fn it_should_return_error_when_decoding_bad_base64_str() {
+        let input = "AAAAAAAAAAgABAAAAAAAA+";
+        let expected = U64Error::InvalidBase64String;
+        let sut = Uuid4::try_from(input).unwrap_err();
+        assert_eq!(sut, expected);
+    }
+    #[test]
+    fn it_should_return_error_when_decoding_bad_hex_str() {
+        let input = "0000000000000080004000000000000Z";
+        let expected = U64Error::InvalidHexString;
+        let sut = Uuid4::try_from(input).unwrap_err();
+        assert_eq!(sut, expected);
+    }
+    #[test]
+    fn it_should_return_error_when_decoding_bad_uuid_str() {
+        let input = "00000000-0000-0080-0040-00000000000Z";
+        let expected = U64Error::InvalidUuidString;
+        let sut = Uuid4::try_from(input).unwrap_err();
+        assert_eq!(sut, expected);
     }
 }
