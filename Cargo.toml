@@ -9,6 +9,9 @@ homepage = "https://github.com/Dragonrun1/uuid64rs"
 readme = "README.md"
 repository = "https://github.com/Dragonrun1/uuid64rs"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
 rand = "0.7.3"
 serde = "1.0.118"
