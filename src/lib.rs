@@ -34,18 +34,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-pub use crate::error::*;
-use std::collections::HashMap;
-use std::convert::TryInto;
+pub use crate::{error::*, uuid4::*};
+use std::{collections::HashMap, convert::TryInto};
 
 mod error;
 #[cfg(test)]
 mod tests;
 mod uuid4;
 
+/// Core trait for the library.
 pub trait Uuid {
+    /// Provides direct access to the internal value of the uuid.
+    ///
+    /// This allows the other trait methods to access the value without knowing
+    /// how or where it is actual kept.
     fn uuid0(&self) -> u128;
+    /// Provides direct access to set the internal value of the uuid.
+    ///
+    /// This allows the other trait methods to write the value without knowing
+    /// how or where it is actual kept.
     fn set_uuid0(&mut self, v: u128);
+    /// Generate a custom base 64 encoded UUID v4 (random).
     fn as_base64(&self) -> Result<String, U64Error> {
         let mut map = HashMap::with_capacity(64);
         for (k, v) in Self::BASE64.iter() {
@@ -68,9 +77,20 @@ pub trait Uuid {
         }
         Ok(result)
     }
+    /// Generate a hexadecimal encoded UUID v4 (random).
     fn as_hex_string(&self) -> String {
         format!("{:0>32x}", self.uuid0())
     }
+    /// Generate a standard UUID v4 (random).
+    ///
+    /// The original PHP code for the function was found in answer at
+    /// https://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid
+    /// by Arie which is based on a function found at
+    /// http://php.net/manual/en/function.com-create-guid.php
+    /// by pavel.volyntsev(at)gmail.
+    ///
+    /// There have been many other changes since the above code especially with
+    /// translation to Rust.
     fn as_uuid(&self) -> Result<String, U64Error> {
         let byte_array: [u8; 32] =
             self.as_hex_string().as_bytes().try_into()?;
@@ -88,6 +108,7 @@ pub trait Uuid {
         }
         Ok(result)
     }
+    /// An array use when decoding/encoding base64.
     const BASE64: [(&'static str, char); 64] = [
         ("000000", 'A'),
         ("000001", 'B'),

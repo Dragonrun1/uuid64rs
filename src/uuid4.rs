@@ -45,10 +45,19 @@ use std::{
     fmt,
 };
 
+/// Minimum structure for implementing core trait.
+///
+/// It implements a lot of From and TryFrom traits to allow easy
+/// interfacing with most any code and easy conversions between formats.
 #[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Uuid4(u128);
 
 impl Uuid4 {
+    /// Construct a new random instance.
+    ///
+    /// ## Arguments
+    /// * `rng` - Optional random number generator to save startup overhead when
+    /// generating lots of new UUIDs or other custom needs.
     #[allow(dead_code)]
     pub fn new(rng: Option<Box<dyn RngCore>>) -> Self {
         let mut v: u128;
@@ -63,9 +72,11 @@ impl Uuid4 {
 }
 
 impl Uuid for Uuid4 {
+    #[inline]
     fn uuid0(&self) -> u128 {
         self.0
     }
+    #[inline]
     fn set_uuid0(&mut self, v: u128) {
         self.0 = v;
     }
