@@ -165,7 +165,7 @@ mod uuid4 {
         ];
         let inputs = test_inputs_array_data();
         for (input, expected) in inputs.iter().zip(expects) {
-            let sut: Uuid4 = input.into();
+            let sut: Uuid4 = input.try_into().unwrap();
             let expected = String::from(expected);
             assert_eq!(sut.as_base64().unwrap(), expected)
         }
