@@ -1,5 +1,4 @@
 name: Rust
-
 on:
   push:
     branches: [ main ]
@@ -10,35 +9,53 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  checks:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          components: clippy, rustfmt
+          override: true
+      - run: cargo fmt -- --check
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
   build:
-
+    needs: checks
     runs-on: ${{ matrix.operating-system }}
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
       fail-fast: true
       matrix:
-        operating-system: [ubuntu-20.04, ubuntu-18.04, windows-latest, macos-latest]
-
+        operating-system: [ ubuntu-20.04, ubuntu-18.04, windows-latest, macos-latest ]
     steps:
-    - uses: actions/checkout@v2
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v2
+      - name: Install stable Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Build
+        run: cargo build --verbose
+      - name: Run tests
+        run: cargo test --verbose
   coverage:
-    name: Code coverage
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     env:
       CARGO_MAKE_RUN_CODECOV: true
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install stable
-        uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly
           override: true
-      - name: Download cargo-make
-        uses: davidB/rust-cargo-make@v1
-      - name: Run tests with coverage
-        run: cargo make ci-flow
+      - uses: davidB/rust-cargo-make@v1
+      - run: cargo make ci-flow
