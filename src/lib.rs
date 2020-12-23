@@ -39,6 +39,8 @@ use std::collections::HashMap;
 use std::convert::TryInto;
 
 mod error;
+#[cfg(test)]
+mod tests;
 mod uuid4;
 
 pub trait Uuid {
