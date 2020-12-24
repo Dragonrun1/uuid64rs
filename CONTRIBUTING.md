@@ -12,6 +12,10 @@ reported to the community leaders responsible for enforcement at
 
 ## Styleguides
 
+### Documentation
+
+TODO
+
 ### Git Commit Messages
 
 * Use the present tense ("Add feature" not "Added feature")
@@ -38,11 +42,23 @@ reported to the community leaders responsible for enforcement at
 
 ### Rust Styleguide
 
-Please use `rustfmt` on all code submissions.
+Please run
+```shell
+cargo fmt
+```
+on all code submissions.
 There is a `.rustfmt.toml` file included in the root directory with a few
-settings that should be picked up automatically.
+settings that should be picked up automatically and make your code fit right in.
 
 All Rust code is linted with [Clippy].
+
+Running
+```shell
+cargo +nightly clippy --all-features
+```
+will help polish the code before the CI workflow sees it and possibly starts
+screaming :scream: at you and makes you :facepalm: facepalm or something because
+you missed it.
 
 ### Test Styleguide
 

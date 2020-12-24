@@ -1,8 +1,10 @@
 # uuid64rs
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-[![Rust](https://github.com/Dragonrun1/uuid64rs/workflows/Rust/badge.svg)](https://github.com/Dragonrun1/uuid64rs/workflows/Rust/badge.svg)
+![ci](https://github.com/Dragonrun1/uuid64rs/workflows/Rust/badge.svg)
 [![codecov](https://codecov.io/gh/Dragonrun1/uuid64rs/branch/main/graph/badge.svg?token=5C77XWIDN0)](https://codecov.io/gh/Dragonrun1/uuid64rs)
-[![Crates.io](https://img.shields.io/crates/l/uuid64rs)](https://crates.io/crates/uuid64rs)
+![Crates.io](https://img.shields.io/crates/v/uuid64rs)
+<br>
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
+[![Crates.io](https://img.shields.io/crates/l/uuid64rs)](https://github.com/Dragonrun1/uuid64rs/blob/main/README.md#licenses)
 
 UUID v4 (random) Rust crate with an additional custom base 64 encoding which is
 web and database friendly.
@@ -29,23 +31,15 @@ TODO
 
 ## Contributing
 
-Contributors are welcome.
-Please note that this project has a [Contributor Covenant Code of Conduct].
-By participating in this project you agree to abide by its terms.
+How to contribute:
 
-All intentionally contributed code will be considered to also be contributed
-under a dual licensing of [APACHE] and [MIT] without any additional terms or
-conditions.
-Please include your information in a comment on all code files for the copyright
-etc.
+* :bug: Bug reports - Insects are fine but not in our software.
+* :star_struck: Pull requests - Finding and fixing the bug are even better.
+* :thinking: Feature requests - Always interest in hear ideas to make things better.
+* :hugs: Improving the docs - Easy way to start contributing.
 
-All intentionally contributed documentation or non-code text like this README
-etc. will be considered to be contributed under the same [CC-BY-SA] license
-without any additional terms or conditions.
-
-Pull requests are always welcome. For major changes, please open an issue first
-to discuss what you would like to change.
-Please make sure to update or add tests as appropriate.
+If you are looking at doing any of these things make sure you have a look at our
+[CONTRIBUTING] docs.
 
 ## Licenses
 
@@ -65,6 +59,7 @@ You can find a copy of the [CC-BY-SA] license in the [LICENSE-CC-BY-SA] file.
 [APACHE]: https://opensource.org/licenses/Apache-2.0
 [CC-BY-SA]: http://creativecommons.org/licenses/by-sa/4.0/
 [Cargo.toml]: https://doc.rust-lang.org/cargo/guide/dependencies.html
+[CONTRIBUTING]: CONTRIBUTING.md
 [Contributor Covenant Code of Conduct]: CODE_OF_CONDUCT.md
 [LICENSE-APACHE]: LICENSE-APACHE
 [LICENSE-CC-BY-SA]: LICENSE-CC-BY-SA
