@@ -1,4 +1,4 @@
-name: Rust
+name: ci
 on:
   push:
     branches: [ main ]
@@ -35,16 +35,12 @@ jobs:
         operating-system: [ ubuntu-20.04, ubuntu-18.04, windows-latest, macos-latest ]
     steps:
       - uses: actions/checkout@v2
-      - name: Install stable Rust
-        uses: actions-rs/toolchain@v1
+      - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
           override: true
-      - name: Build
-        run: cargo build --verbose
-      - name: Run tests
-        run: cargo test --verbose
+      - run: cargo test --verbose
   coverage:
     needs: build
     runs-on: ubuntu-latest
