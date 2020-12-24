@@ -1,5 +1,5 @@
 # uuid64rs
-![ci](https://github.com/Dragonrun1/uuid64rs/workflows/Rust/badge.svg)
+![ci](https://github.com/Dragonrun1/uuid64rs/workflows/ci/badge.svg)
 [![codecov](https://codecov.io/gh/Dragonrun1/uuid64rs/branch/main/graph/badge.svg?token=5C77XWIDN0)](https://codecov.io/gh/Dragonrun1/uuid64rs)
 ![Crates.io](https://img.shields.io/crates/v/uuid64rs)
 <br>
