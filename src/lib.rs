@@ -35,7 +35,7 @@
 // SOFTWARE.
 
 pub use crate::{error::*, uuid4::*};
-use std::{collections::HashMap, convert::TryInto};
+use std::collections::HashMap;
 
 mod error;
 #[cfg(test)]
