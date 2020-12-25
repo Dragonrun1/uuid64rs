@@ -79,7 +79,7 @@ mod uuid4 {
     #[test]
     fn it_should_create_a_valid_uuid_in_new_with_none() {
         let sut = Uuid4::new(None);
-        let uuid = sut.as_uuid().unwrap();
+        let uuid = sut.as_uuid();
         let internal = sut.uuid0();
         assert_eq!(uuid.len(), 36);
         let sut = Uuid4::try_from(&*uuid).unwrap();
@@ -167,7 +167,7 @@ mod uuid4 {
         for (input, expected) in inputs.iter().zip(expects) {
             let sut: Uuid4 = input.try_into().unwrap();
             let expected = String::from(expected);
-            assert_eq!(sut.as_base64().unwrap(), expected)
+            assert_eq!(sut.as_base64(), expected)
         }
     }
 
@@ -211,7 +211,7 @@ mod uuid4 {
         for (input, expected) in inputs.iter().zip(expects) {
             let sut: Uuid4 = input.into();
             let expected = String::from(expected);
-            assert_eq!(sut.as_uuid().unwrap(), expected)
+            assert_eq!(sut.as_uuid(), expected)
         }
     }
 
@@ -219,7 +219,7 @@ mod uuid4 {
     fn it_should_have_valid_default() {
         let expected = "00000000-0000-0080-0040-000000000000";
         let sut = Uuid4::default();
-        assert_eq!(sut.as_uuid().unwrap(), expected)
+        assert_eq!(sut.as_uuid(), expected)
     }
 
     #[test]

@@ -62,8 +62,6 @@ pub enum U64Error {
     InvalidUtf8String,
     #[error("The given uuid string contained one or more invalid characters")]
     InvalidUuidString,
-    #[error("Received unknown bit pattern: {0}")]
-    UnknownBitPattern(String),
 }
 
 impl PartialEq for U64Error {
@@ -78,7 +76,6 @@ impl PartialEq for U64Error {
             (InvalidStrLength(m), InvalidStrLength(n)) => m == n,
             (InvalidUtf8String, InvalidUtf8String) => true,
             (InvalidUuidString, InvalidUuidString) => true,
-            (UnknownBitPattern(m), UnknownBitPattern(n)) => m == n,
             _ => false,
         }
     }

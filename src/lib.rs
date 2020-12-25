@@ -55,7 +55,7 @@ pub trait Uuid {
     /// how or where it is actual kept.
     fn set_uuid0(&mut self, v: u128);
     /// Generate a custom base 64 encoded UUID v4 (random).
-    fn as_base64(&self) -> Result<String, U64Error> {
+    fn as_base64(&self) -> String {
         let mut map = HashMap::with_capacity(64);
         for (k, v) in Self::BASE64.iter() {
             map.insert(*k, *v);
@@ -63,19 +63,15 @@ pub trait Uuid {
         let mut binary = String::from("0000");
         binary += &*format!("{:0>128b}", self.uuid0());
         let mut result = String::new();
-        while binary.len() >= 6 {
+        for _ in 0..22 {
             let (bits, remaining) = binary.split_at(6);
-            match map.get(bits) {
-                Some(v) => {
-                    result.push(*v);
-                    binary = remaining.to_string();
-                }
-                None => {
-                    return Err(U64Error::UnknownBitPattern(bits.to_string()))
-                }
-            }
+            result.push(
+                *map.get(bits)
+                    .expect("Received unknown bit pattern. Check BASE64"),
+            );
+            binary = remaining.to_string();
         }
-        Ok(result)
+        result
     }
     /// Generate a hexadecimal encoded UUID v4 (random).
     fn as_hex_string(&self) -> String {
@@ -91,22 +87,18 @@ pub trait Uuid {
     ///
     /// There have been many other changes since the above code especially with
     /// translation to Rust.
-    fn as_uuid(&self) -> Result<String, U64Error> {
-        let byte_array: [u8; 32] =
-            self.as_hex_string().as_bytes().try_into()?;
+    fn as_uuid(&self) -> String {
+        let mut hex = format!("{:0>32x}", self.uuid0());
         let mut result = String::new();
-        // 8, 4, 4, 4, 12 hex offsets into indexes
-        // Trailing 0 insures no more matches to index and prevents '-' at end.
-        let mut hyphens = [7usize, 11, 15, 19, 0].iter();
-        let mut hyphen = *hyphens.next().unwrap();
-        for (idx, byte) in byte_array.iter().enumerate() {
-            result.push((*byte).into());
-            if idx == hyphen {
-                result.push('-');
-                hyphen = *hyphens.next().unwrap();
-            }
+        let chunks = [8usize, 4, 4, 4, 12];
+        for idx in chunks.iter() {
+            let (chunk, remaining) = hex.split_at(*idx);
+            result.push_str(chunk);
+            result.push('-');
+            hex = remaining.to_string();
         }
-        Ok(result)
+        result.truncate(36);
+        result
     }
     /// An array use when decoding/encoding base64.
     const BASE64: [(&'static str, char); 64] = [
