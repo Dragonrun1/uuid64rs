@@ -1,8 +1,8 @@
-name: publish
+name: publish to crates.io
 on:
-  release:
-    types:
-      - published
+  push:
+    tags:
+      - "*.*.*"
 env:
   CARGO_TERM_COLOR: always
 

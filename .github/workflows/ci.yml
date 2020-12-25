@@ -55,12 +55,3 @@ jobs:
           override: true
       - uses: davidB/rust-cargo-make@v1
       - run: cargo make ci-flow
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: Roang-zero1/github-create-release-action@master
-        with:
-          version_regex: ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
