@@ -34,6 +34,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#[cfg(feature = "experimental")]
+pub use crate::uuid4gen::*;
 pub use crate::{error::*, uuid4::*};
 use std::collections::HashMap;
 
@@ -41,6 +43,8 @@ mod error;
 #[cfg(test)]
 mod tests;
 mod uuid4;
+#[cfg(feature = "experimental")]
+mod uuid4gen;
 
 /// Core trait for the library.
 pub trait Uuid {

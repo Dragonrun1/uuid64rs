@@ -36,9 +36,10 @@
 
 pub use crate::error::*;
 use crate::Uuid;
-use rand::{Rng, RngCore};
+use rand::rngs::ThreadRng;
+use rand::Rng;
 use serde::export::Formatter;
-use serde_derive::Deserialize;
+use serde_derive::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
     convert::{TryFrom, TryInto},
@@ -49,7 +50,7 @@ use std::{
 ///
 /// It implements a lot of From and TryFrom traits to allow easy
 /// interfacing with most any code and easy conversions between formats.
-#[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct Uuid4(u128);
 
 impl Uuid4 {
@@ -58,9 +59,12 @@ impl Uuid4 {
     /// ## Arguments
     /// * `rng` - Optional random number generator to save startup overhead when
     /// generating lots of new UUIDs or other custom needs.
-    #[allow(dead_code)]
-    pub fn new(rng: Option<Box<dyn RngCore>>) -> Self {
+    pub fn new<TR>(rng: TR) -> Self
+    where
+        TR: Into<Option<ThreadRng>>,
+    {
         let mut v: u128;
+        let rng = rng.into();
         match rng {
             Some(mut r) => v = r.gen(),
             None => v = rand::random(),

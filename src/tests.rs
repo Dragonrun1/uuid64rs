@@ -35,8 +35,9 @@
 // SOFTWARE.
 
 mod uuid4 {
-    use crate::*;
     use std::convert::TryFrom;
+
+    use crate::*;
 
     /// Common input data for encoder tests.
     fn test_inputs_array_data() -> Vec<[u8; 16]> {
@@ -59,7 +60,6 @@ mod uuid4 {
             ],
         ]
     }
-
     /// Common expect data for decode tests.
     fn test_expects_array_data() -> Vec<u128> {
         vec![
@@ -85,7 +85,6 @@ mod uuid4 {
         let sut = Uuid4::try_from(&*uuid).unwrap();
         assert_eq!(sut.uuid0(), internal)
     }
-
     #[test]
     fn it_should_correctly_decode_base64_from_str() {
         let inputs = vec![
@@ -106,7 +105,6 @@ mod uuid4 {
             assert_eq!(sut.uuid0(), expected);
         }
     }
-
     #[test]
     fn it_should_correctly_decode_hex_string_from_str() {
         let inputs = vec![
@@ -127,7 +125,6 @@ mod uuid4 {
             assert_eq!(sut.uuid0(), expected);
         }
     }
-
     #[test]
     fn it_should_correctly_decode_uuid_from_str() {
         let inputs = vec![
@@ -148,7 +145,6 @@ mod uuid4 {
             assert_eq!(sut.uuid0(), expected);
         }
     }
-
     #[test]
     fn it_should_correctly_encode_based64() {
         let expects = vec![
@@ -170,7 +166,6 @@ mod uuid4 {
             assert_eq!(sut.as_base64(), expected)
         }
     }
-
     #[test]
     fn it_should_correctly_encode_hex_string() {
         let expects = vec![
@@ -192,7 +187,6 @@ mod uuid4 {
             assert_eq!(sut.as_hex_string(), expected)
         }
     }
-
     #[test]
     fn it_should_correctly_encode_uuid() {
         let expects = vec![
@@ -214,14 +208,12 @@ mod uuid4 {
             assert_eq!(sut.as_uuid(), expected)
         }
     }
-
     #[test]
     fn it_should_have_valid_default() {
         let expected = "00000000-0000-0080-0040-000000000000";
         let sut = Uuid4::default();
         assert_eq!(sut.as_uuid(), expected)
     }
-
     #[test]
     fn it_should_return_error_when_decoding_bad_base64_str() {
         let input = "AAAAAAAAAAgABAAAAAAAA+";
@@ -229,7 +221,6 @@ mod uuid4 {
         let sut = Uuid4::try_from(input).unwrap_err();
         assert_eq!(sut, expected);
     }
-
     #[test]
     fn it_should_return_error_when_decoding_bad_hex_str() {
         let input = "0000000000000080004000000000000Z";
@@ -237,12 +228,31 @@ mod uuid4 {
         let sut = Uuid4::try_from(input).unwrap_err();
         assert_eq!(sut, expected);
     }
-
     #[test]
     fn it_should_return_error_when_decoding_bad_uuid_str() {
         let input = "00000000-0000-0080-0040-00000000000Z";
         let expected = U64Error::InvalidUuidString;
         let sut = Uuid4::try_from(input).unwrap_err();
         assert_eq!(sut, expected);
+    }
+    #[test]
+    fn it_should_junk() {
+        let sut = Uuid4::default();
+        let ser = serde_json::to_string(&sut).unwrap();
+        let deser: Uuid4 = serde_json::from_str(&ser).unwrap();
+        eprintln!("serialized = {}", ser);
+        println!("deserialized = {:?}", deser);
+    }
+}
+#[cfg(feature = "experimental")]
+mod uuid4gen {
+    use crate::*;
+
+    #[test]
+    fn it_should_generate_correct_length_values() {
+        let sut = Uuid4Gen::new();
+        assert_eq!(sut.gen_base64().len(), 22);
+        assert_eq!(sut.gen_hex_string().len(), 32);
+        assert_eq!(sut.gen_uuid().len(), 36);
     }
 }
