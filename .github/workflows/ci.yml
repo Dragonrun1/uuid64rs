@@ -20,6 +20,7 @@ jobs:
           toolchain: nightly
           components: clippy, rustfmt
           override: true
+      - run: cargo clean
       - run: cargo fmt -- --check
       - uses: actions-rs/clippy-check@v1
         with:

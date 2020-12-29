@@ -36,8 +36,7 @@
 
 pub use crate::error::*;
 use crate::Uuid;
-use rand::rngs::ThreadRng;
-use rand::Rng;
+use rand::{rngs::ThreadRng, Rng};
 use serde::export::Formatter;
 use serde_derive::{Deserialize, Serialize};
 use std::{
