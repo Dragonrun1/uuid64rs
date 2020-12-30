@@ -36,9 +36,18 @@
 
 pub use crate::error::*;
 use crate::Uuid;
+#[cfg(feature = "diesel")]
+use diesel::{
+    backend::Backend,
+    deserialize::{self, FromSql},
+    serialize::{self, Output, ToSql},
+    sql_types::*,
+};
 use rand::{rngs::ThreadRng, Rng};
 use serde::export::Formatter;
 use serde_derive::{Deserialize, Serialize};
+#[cfg(feature = "diesel")]
+use std::io::Write;
 use std::{
     collections::HashMap,
     convert::{TryFrom, TryInto},
@@ -166,7 +175,6 @@ impl TryFrom<&[u8]> for Uuid4 {
 
 impl TryFrom<&[u8; 22]> for Uuid4 {
     type Error = U64Error;
-
     fn try_from(value: &[u8; 22]) -> Result<Self, Self::Error> {
         let mut map = HashMap::with_capacity(64);
         for (v, k) in Self::BASE64.iter() {
@@ -229,5 +237,30 @@ impl TryFrom<&[u8; 36]> for Uuid4 {
         result &= 0xffffffffffffff3fff0fffffffffffff;
         result |= 0x00000000000000800040000000000000;
         Ok(Self(result))
+    }
+}
+
+#[cfg(feature = "diesel")]
+impl<DB> FromSql<Binary, DB> for Uuid4
+where
+    DB: Backend<RawValue = [u8]>,
+    String: FromSql<Binary, DB>,
+{
+    fn from_sql(bytes: Option<&DB::RawValue>) -> deserialize::Result<Self> {
+        match bytes {
+            Some(bytes) => Ok(bytes.try_into()?),
+            None => Err(Box::new(diesel::result::UnexpectedNullError)),
+        }
+    }
+}
+
+#[cfg(feature = "diesel")]
+impl<DB> ToSql<Binary, DB> for Uuid4
+where
+    DB: Backend,
+    String: ToSql<Binary, DB>,
+{
+    fn to_sql<W: Write>(&self, out: &mut Output<W, DB>) -> serialize::Result {
+        self.as_base64().to_sql(out)
     }
 }

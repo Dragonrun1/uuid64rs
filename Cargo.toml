@@ -1,6 +1,6 @@
 [package]
 name = "uuid64rs"
-version = "0.0.7"
+version = "0.0.8"
 description = "UUID v4 (random) Rust crate with an additional custom base 64 encoding which is web and database friendly"
 authors = ["Michael Cummings <dragonrun1@gmail.com>"]
 edition = "2018"
@@ -14,17 +14,18 @@ repository = "https://github.com/Dragonrun1/uuid64rs"
 #crate-type = ["cdylib", "dylib"]
 
 [dependencies]
+diesel = { version = "1.4.5", optional = true }
 rand = "0.7.3"
 serde = "1.0.118"
 serde_derive = "1.0.118"
 serde_json = "1.0.60"
 thiserror = "1.0.22"
 thiserror-impl = "1.0.22"
-wasm-bindgen = "0.2.69"
+wasm-bindgen = { version = "0.2.69", optional = true }
 
 [features]
 default = []
-experimental = []
+experimental = ["wasm-bindgen"]
 
 [package.metadata.wasm-pack.profile.release]
 #wasm-opt = ["-Oz", "--enable-mutable-globals"]

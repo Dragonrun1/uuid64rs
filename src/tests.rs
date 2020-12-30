@@ -244,7 +244,7 @@ mod uuid4 {
         println!("deserialized = {:?}", deser);
     }
 }
-#[cfg(feature = "experimental")]
+#[cfg(feature = "wasm-bindgen")]
 mod uuid4gen {
     use crate::*;
 
