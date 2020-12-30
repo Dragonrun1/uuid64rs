@@ -2,6 +2,7 @@
 [![ci](https://github.com/Dragonrun1/uuid64rs/workflows/ci/badge.svg)](https://github.com/Dragonrun1/uuid64rs/actions)
 [![codecov](https://codecov.io/gh/Dragonrun1/uuid64rs/branch/main/graph/badge.svg)](https://codecov.io/gh/Dragonrun1/uuid64rs)
 [![Crates.io](https://img.shields.io/crates/v/uuid64rs)](https://crates.io/crates/uuid64rs)
+[![dependency status](https://deps.rs/repo/github/dragonrun1/uuid64rs/status.svg)](https://deps.rs/repo/github/dragonrun1/uuid64rs)
 <br>
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 [![Crates.io](https://img.shields.io/crates/l/uuid64rs)](https://github.com/Dragonrun1/uuid64rs/blob/main/README.md#licenses)
