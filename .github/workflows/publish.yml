@@ -15,7 +15,7 @@ jobs:
         with:
           toolchain: stable
           override: true
-      - run: cargo test --verbose
+      - run: cargo test --all-features --verbose
       - run: cargo publish
         env:
           CARGO_REGISTRY_TOKEN: "${{ secrets.CARGO_REGISTRY_TOKEN }}"

@@ -41,7 +41,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - run: cargo test --verbose
+      - run: cargo test --all-features --verbose
   coverage:
     needs: build
     runs-on: ubuntu-latest
