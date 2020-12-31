@@ -48,14 +48,14 @@ impl Uuid4Gen {
     pub fn new() -> Self {
         Self::default()
     }
-    pub fn gen_base64(&self) -> String {
-        Uuid4::new(self.0).as_base64()
+    pub fn gen_base64(&mut self) -> String {
+        Uuid4::new(Some(&mut self.0)).as_base64()
     }
-    pub fn gen_hex_string(&self) -> String {
-        Uuid4::new(self.0).as_hex_string()
+    pub fn gen_hex_string(&mut self) -> String {
+        Uuid4::new(Some(&mut self.0)).as_hex_string()
     }
-    pub fn gen_uuid(&self) -> String {
-        Uuid4::new(self.0).as_uuid()
+    pub fn gen_uuid(&mut self) -> String {
+        Uuid4::new(Some(&mut self.0)).as_uuid()
     }
 }
 

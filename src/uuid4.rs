@@ -46,11 +46,11 @@ use diesel_derives::{AsExpression, FromSqlRow, SqlType};
 use rand::{rngs::ThreadRng, Rng};
 use serde::export::Formatter;
 use serde_derive::{Deserialize, Serialize};
-use std::io::Write;
 use std::{
     collections::HashMap,
     convert::{TryFrom, TryInto},
     fmt,
+    io::Write,
 };
 
 /// Minimum structure for implementing core trait.
@@ -78,14 +78,14 @@ impl Uuid4 {
     /// ## Arguments
     /// * `rng` - Optional random number generator to save startup overhead when
     /// generating lots of new UUIDs or other custom needs.
-    pub fn new<TR>(rng: TR) -> Self
+    pub fn new<'a, TR>(rng: TR) -> Self
     where
-        TR: Into<Option<ThreadRng>>,
+        TR: Into<Option<&'a mut ThreadRng>>,
     {
         let mut v: u128;
         let rng = rng.into();
         match rng {
-            Some(mut r) => v = r.gen(),
+            Some(r) => v = r.gen(),
             None => v = rand::random(),
         }
         v &= 0xffffffffffffff3fff0fffffffffffff;

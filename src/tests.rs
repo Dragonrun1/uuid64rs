@@ -250,7 +250,7 @@ mod uuid4gen {
 
     #[test]
     fn it_should_generate_correct_length_values() {
-        let sut = Uuid4Gen::new();
+        let mut sut = Uuid4Gen::new();
         assert_eq!(sut.gen_base64().len(), 22);
         assert_eq!(sut.gen_hex_string().len(), 32);
         assert_eq!(sut.gen_uuid().len(), 36);
