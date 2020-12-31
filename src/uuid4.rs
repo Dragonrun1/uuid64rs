@@ -43,6 +43,8 @@ use diesel::{
     serialize::{self, Output, ToSql},
     sql_types::*,
 };
+#[cfg(feature = "diesel")]
+use diesel_derives::{AsExpression, FromSqlRow, SqlType};
 use rand::{rngs::ThreadRng, Rng};
 use serde::export::Formatter;
 use serde_derive::{Deserialize, Serialize};
@@ -58,7 +60,11 @@ use std::{
 ///
 /// It implements a lot of From and TryFrom traits to allow easy
 /// interfacing with most any code and easy conversions between formats.
-#[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
+#[derive(
+    Debug, Deserialize, Hash, Eq, Ord, PartialEq, PartialOrd, Serialize,
+)]
+#[cfg_attr(feature = "diesel", derive(AsExpression, FromSqlRow))]
+#[sql_type = "Uuid4Proxy"]
 pub struct Uuid4(u128);
 
 impl Uuid4 {
@@ -241,10 +247,9 @@ impl TryFrom<&[u8; 36]> for Uuid4 {
 }
 
 #[cfg(feature = "diesel")]
-impl<DB> FromSql<Binary, DB> for Uuid4
+impl<DB> FromSql<Uuid4Proxy, DB> for Uuid4
 where
     DB: Backend<RawValue = [u8]>,
-    String: FromSql<Binary, DB>,
 {
     fn from_sql(bytes: Option<&DB::RawValue>) -> deserialize::Result<Self> {
         match bytes {
@@ -255,7 +260,7 @@ where
 }
 
 #[cfg(feature = "diesel")]
-impl<DB> ToSql<Binary, DB> for Uuid4
+impl<DB> ToSql<Uuid4Proxy, DB> for Uuid4
 where
     DB: Backend,
     String: ToSql<Binary, DB>,
@@ -264,3 +269,7 @@ where
         self.as_base64().to_sql(out)
     }
 }
+
+#[cfg(feature = "diesel")]
+#[derive(SqlType)]
+pub struct Uuid4Proxy;
