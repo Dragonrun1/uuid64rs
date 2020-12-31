@@ -36,19 +36,16 @@
 
 pub use crate::error::*;
 use crate::Uuid;
-#[cfg(feature = "diesel")]
 use diesel::{
     backend::Backend,
     deserialize::{self, FromSql},
     serialize::{self, Output, ToSql},
     sql_types::*,
 };
-#[cfg(feature = "diesel")]
 use diesel_derives::{AsExpression, FromSqlRow, SqlType};
 use rand::{rngs::ThreadRng, Rng};
 use serde::export::Formatter;
 use serde_derive::{Deserialize, Serialize};
-#[cfg(feature = "diesel")]
 use std::io::Write;
 use std::{
     collections::HashMap,
@@ -61,9 +58,17 @@ use std::{
 /// It implements a lot of From and TryFrom traits to allow easy
 /// interfacing with most any code and easy conversions between formats.
 #[derive(
-    Debug, Deserialize, Hash, Eq, Ord, PartialEq, PartialOrd, Serialize,
+    AsExpression,
+    Debug,
+    Deserialize,
+    Eq,
+    FromSqlRow,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Serialize,
 )]
-#[cfg_attr(feature = "diesel", derive(AsExpression, FromSqlRow))]
 #[sql_type = "Uuid4Proxy"]
 pub struct Uuid4(u128);
 
@@ -246,7 +251,6 @@ impl TryFrom<&[u8; 36]> for Uuid4 {
     }
 }
 
-#[cfg(feature = "diesel")]
 impl<DB> FromSql<Uuid4Proxy, DB> for Uuid4
 where
     DB: Backend<RawValue = [u8]>,
@@ -259,7 +263,6 @@ where
     }
 }
 
-#[cfg(feature = "diesel")]
 impl<DB> ToSql<Uuid4Proxy, DB> for Uuid4
 where
     DB: Backend,
@@ -270,6 +273,5 @@ where
     }
 }
 
-#[cfg(feature = "diesel")]
 #[derive(SqlType)]
 pub struct Uuid4Proxy;
