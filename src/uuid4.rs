@@ -39,13 +39,11 @@ use crate::Uuid;
 use diesel::{
     backend::Backend,
     deserialize::{self, FromSql},
-    serialize::{self, Output, ToSql},
-    sql_types::*,
+    serialize::{self, ToSql},
 };
 use diesel_derives::{AsExpression, FromSqlRow, SqlType};
 use rand::{rngs::ThreadRng, Rng};
-use serde::export::Formatter;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
     convert::{TryFrom, TryInto},
@@ -83,8 +81,7 @@ impl Uuid4 {
         TR: Into<Option<&'a mut ThreadRng>>,
     {
         let mut v: u128;
-        let rng = rng.into();
-        match rng {
+        match rng.into() {
             Some(r) => v = r.gen(),
             None => v = rand::random(),
         }
@@ -126,7 +123,7 @@ impl fmt::LowerHex for Uuid4 {
 }
 
 impl fmt::UpperHex for Uuid4 {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let val = self.0;
         fmt::UpperHex::fmt(&val, f)
     }
@@ -266,9 +263,12 @@ where
 impl<DB> ToSql<Uuid4Proxy, DB> for Uuid4
 where
     DB: Backend,
-    String: ToSql<Binary, DB>,
+    String: ToSql<Uuid4Proxy, DB>,
 {
-    fn to_sql<W: Write>(&self, out: &mut Output<W, DB>) -> serialize::Result {
+    fn to_sql<W: Write>(
+        &self,
+        out: &mut serialize::Output<W, DB>,
+    ) -> serialize::Result {
         self.as_base64().to_sql(out)
     }
 }

@@ -42,8 +42,6 @@ use thiserror::Error;
 #[derive(Error, Debug)]
 #[non_exhaustive]
 pub enum U64Error {
-    #[error("Expected data array length of 16 but was given length: {0}")]
-    InvalidArrayLength(usize),
     #[error(
         "The given base64 string contained one or more invalid characters"
     )]
@@ -56,7 +54,7 @@ pub enum U64Error {
     InvalidHexString,
     #[error(transparent)]
     InvalidSliceLength(#[from] TryFromSliceError),
-    #[error("Can not convert a string with length of: {0}")]
+    #[error("Can not convert a string/slice with length of: {0}")]
     InvalidStrLength(usize),
     #[error("The given string contained one or more invalid UTF-8 characters")]
     InvalidUtf8String,
@@ -68,7 +66,6 @@ impl PartialEq for U64Error {
     fn eq(&self, other: &Self) -> bool {
         use crate::U64Error::*;
         match (self, other) {
-            (InvalidArrayLength(m), InvalidArrayLength(n)) => m == n,
             (InvalidBase64String, InvalidBase64String) => true,
             (InvalidBinString, InvalidBinString) => true,
             (InvalidHexString, InvalidHexString) => true,

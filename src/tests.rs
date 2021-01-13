@@ -46,6 +46,7 @@ mod uuid4 {
             [255; 16],
             [15; 16],
             [240; 16],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [1, 3, 5, 9, 17, 33, 65, 129, 129, 65, 33, 17, 9, 5, 3, 1],
             [0, 62, 63, 64, 65, 66, 67, 68, 69, 70, 30, 31, 32, 33, 34, 35],
             [61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 30, 31, 32, 33, 34, 0],
@@ -152,6 +153,7 @@ mod uuid4 {
             "D_________v_9P________",
             "APDw8PDw8Pjw9PDw8PDw8P",
             "Dw8PDw8PDwsPBA8PDw8PDw",
+            "AAAAAAAAAAgABAAAAAAAAB",
             "ABAwUJESFBgYFBIREJBQMB",
             "AjIiEgHx5GhURDQkFAPz4A",
             "AAIiEgHx5GhURDQkFAPz49",
@@ -173,6 +175,7 @@ mod uuid4 {
             "ffffffffffffffbfff4fffffffffffff",
             "0f0f0f0f0f0f0f8f0f4f0f0f0f0f0f0f",
             "f0f0f0f0f0f0f0b0f040f0f0f0f0f0f0",
+            "00000000000000800040000000000001",
             "01030509112141818141211109050301",
             "232221201f1e468544434241403f3e00",
             "002221201f1e468544434241403f3e3d",
@@ -194,6 +197,7 @@ mod uuid4 {
             "ffffffff-ffff-ffbf-ff4f-ffffffffffff",
             "0f0f0f0f-0f0f-0f8f-0f4f-0f0f0f0f0f0f",
             "f0f0f0f0-f0f0-f0b0-f040-f0f0f0f0f0f0",
+            "00000000-0000-0080-0040-000000000001",
             "01030509-1121-4181-8141-211109050301",
             "23222120-1f1e-4685-4443-4241403f3e00",
             "00222120-1f1e-4685-4443-4241403f3e3d",
@@ -236,12 +240,26 @@ mod uuid4 {
         assert_eq!(sut, expected);
     }
     #[test]
+    fn it_should_return_error_when_string_is_invalid_length() {
+        // Length = 21
+        let input = "AAAAAAAAAAgABAAAAAAAA";
+        let expected = U64Error::InvalidStrLength(input.len());
+        let sut = Uuid4::try_from(input).unwrap_err();
+        assert_eq!(sut, expected);
+        // Length = 23
+        let input = "AAAAAAAAAAgABAAAAAAAABB";
+        let expected = U64Error::InvalidStrLength(input.len());
+        let sut = Uuid4::try_from(input).unwrap_err();
+        assert_eq!(sut, expected);
+    }
+    #[test]
+    #[ignore]
     fn it_should_junk() {
         let sut = Uuid4::default();
         let ser = serde_json::to_string(&sut).unwrap();
         let deser: Uuid4 = serde_json::from_str(&ser).unwrap();
         eprintln!("serialized = {}", ser);
-        println!("deserialized = {:?}", deser);
+        eprintln!("deserialized = {:?}", deser);
     }
 }
 #[cfg(feature = "wasm-bindgen")]
