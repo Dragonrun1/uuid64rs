@@ -57,6 +57,7 @@ use std::{
 /// interfacing with most any code and easy conversions between formats.
 #[derive(
     AsExpression,
+    Clone,
     Debug,
     Deserialize,
     Eq,
