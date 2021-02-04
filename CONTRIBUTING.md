@@ -23,23 +23,8 @@ TODO
 * Limit the first line to 72 characters or less
 * Reference issues and pull requests liberally after the first line
 * When only changing documentation, include `[ci skip]` in the commit title
-* Consider starting the commit message with an applicable emoji:
-    * :art: `:art:` when improving the format/structure of the code
-    * :racehorse: `:racehorse:` when improving performance
-    * :non-potable_water: `:non-potable_water:` when plugging memory leaks
-    * :memo: `:memo:` when writing docs
-    * :penguin: `:penguin:` when fixing something on Linux
-    * :apple: `:apple:` when fixing something on macOS
-    * :checkered_flag: `:checkered_flag:` when fixing something on Windows
-    * :bug: `:bug:` when fixing a bug
-    * :fire: `:fire:` when removing code or files
-    * :green_heart: `:green_heart:` when fixing the CI build
-    * :white_check_mark: `:white_check_mark:` when adding tests
-    * :lock: `:lock:` when dealing with security
-    * :arrows_clockwise: `:arrows_clockwise:` when adding/removing dependencies
-    * :arrow_up: `:arrow_up:` when upgrading dependencies
-    * :arrow_down: `:arrow_down:` when downgrading dependencies
-    * :shirt: `:shirt:` when removing linter warnings
+* Consider starting the commit message with an applicable emoji from [gitmoji].
+  You can find a useful cheatsheet at [kapeli].
 
 ### Rust Styleguide
 
@@ -74,3 +59,5 @@ All test function names should use _lower_snake_case_ as is common in Rust.
 
 [Clippy]: https://github.com/rust-lang/rust-clippy
 [Contributor Covenant Code of Conduct]: CODE_OF_CONDUCT.md
+[gitmoji]: https://gitmoji.dev/
+[kapeli]: https://kapeli.com/cheat_sheets/Gitmoji.docset/Contents/Resources/Documents/index
