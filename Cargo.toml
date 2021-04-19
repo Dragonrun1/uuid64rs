@@ -1,6 +1,6 @@
 [package]
 name = "uuid64rs"
-version = "0.0.13"
+version = "0.0.14"
 description = "UUID v4 (random) Rust crate with an additional custom base 64 encoding which is web and database friendly"
 authors = ["Michael Cummings <dragonrun1@gmail.com>"]
 edition = "2018"
@@ -14,14 +14,14 @@ repository = "https://github.com/Dragonrun1/uuid64rs"
 #crate-type = ["cdylib", "dylib"]
 
 [dependencies]
-diesel = "1.4.5"
+diesel = "1.4.6"
 diesel_derives = "1.4.1"
 rand = "0.8.3"
-serde = { version = "1.0.123", features = ["derive"] }
-serde_json = "1.0.61"
-thiserror = "1.0.23"
-thiserror-impl = "1.0.23"
-wasm-bindgen = { version = "0.2.70", optional = true }
+serde = { version = "1.0.125", features = ["derive"] }
+serde_json = "1.0.64"
+thiserror = "1.0.24"
+thiserror-impl = "1.0.24"
+wasm-bindgen = { version = "0.2.73", optional = true }
 
 [features]
 default = []
